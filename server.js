@@ -8,7 +8,6 @@ const Dispense = require('./models/dispenseModel')
 const path = require('path');
 
 const app = express();
-const port = 3000;
 
 app.use(express.json())
 
@@ -29,8 +28,8 @@ mongoose.
     connect(process.env.DATABASE_URL)
     .then(() => { 
         console.log('Connected to DB.')
-        app.listen(port, () => {
-            console.log(`Server is running at http://localhost:${port}`);
+        app.listen(process.env.PORT || 3000, () => {
+            console.log(`Server is running.`);
         });
     }).catch((error) => {
         console.log(error)
