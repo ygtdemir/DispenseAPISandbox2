@@ -11,8 +11,22 @@ const app = express();
 
 app.use(express.json())
 
+const authenticateKey = (req, res, next) => {
+    let api_key = req.header("x-api-key");
+    if (process.env.TEST_API_KEY == api_key) {
+        console.log("Authenticated API call");
+        next();
+    }
+    else {
+        console.log("Authentication error.");
+        console.log(process.env.TEST_API_KEY);
+        console.log(api_key);
+        res.status(403).send({ error: { code: 403, message: "Authentication error." } });
+    }
+};
+
 // Define the endpoint for dispense event
-app.post('/dispense', async(req, res) => {
+app.post('/dispense', authenticateKey, async(req, res) => {
     try {
         const dispense = await Dispense.create(req.body);
         console.log(req.body);
@@ -34,4 +48,4 @@ mongoose.
     }).catch((error) => {
         console.log(error)
     })
-
+    
